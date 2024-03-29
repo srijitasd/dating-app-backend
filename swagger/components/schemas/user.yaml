@@ -1,0 +1,9 @@
+type: object
+properties:
+  id:
+    type: string
+    description: The user ID
+  name:
+    type: string
+  email:
+    type: string
