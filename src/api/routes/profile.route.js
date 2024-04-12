@@ -3,6 +3,7 @@ const { profileMulter } = require("../../utils/multer/multer");
 
 const {
   uploadProfileImage,
+  reorderProfilePictures,
   updateAgeRangePref,
 } = require("../controller/profile.controller");
 
