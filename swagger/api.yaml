@@ -8,9 +8,7 @@ servers:
     description: Development server
 paths:
   /auth/register:
-    $ref: "./paths/registerUser.yaml"
-  /auth/login:
-    $ref: "./paths/loginUser.yaml"
+    $ref: "./paths/auth.yaml#/~1register-user"
   /auth/token/refresh:
     $ref: "./paths/refreshToken.yaml"
 components:

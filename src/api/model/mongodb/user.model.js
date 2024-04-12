@@ -5,7 +5,13 @@ const userSchema = new mongoose.Schema(
     // cognito_id: { type: String },
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    images: [{ type: String }],
+    contact_no: { type: String, required: true, unique: true },
+    images: [
+      {
+        file: String,
+        index: Number, // Used to order images
+      },
+    ],
     age: Number,
     preferences: {
       interests: [String], // List of user interests

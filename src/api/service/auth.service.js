@@ -1,4 +1,8 @@
 const redisClient = require("../../config/redis.db");
+const {
+  session_store,
+  signin_otp_store,
+} = require("../../constants/redis/naming_convention.redis");
 
 const { generateTokens } = require("../../lib/authenticator/functions");
 
@@ -12,7 +16,7 @@ exports.createUser = async (user_data) => {
 
     const { accessToken, refreshToken } = generateTokens(user);
 
-    await redisClient.set(user.id.toString(), refreshToken, {
+    await redisClient.set(session_store(user._id.toString()), refreshToken, {
       EX: 15 * 60, // Set an expiry, e.g., 15 mins in seconds
       NX: true, // Set only if the key does not exist
     });
