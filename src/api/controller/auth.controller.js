@@ -117,18 +117,35 @@ exports.verifyOTP = async (req, res) => {
 };
 
 exports.refreshToken = async (req, res) => {
-  const { userId, refreshToken } = req.body;
+  const { refreshToken } = req.body;
+  const { id } = req.user;
   try {
     const {
       user,
       accessToken,
       refreshToken: newRefreshToken,
-    } = await UserService.refreshToken(userId, refreshToken);
+    } = await UserService.refreshToken(id, refreshToken);
 
-    res.json({ accessToken, refreshToken: newRefreshToken });
+    handleResponse({
+      payload: {
+        status: 200,
+        code: "AUTH_S004",
+        data: { accessToken, refreshToken: newRefreshToken },
+      },
+      handler: "AUTH_CODES_HANDLER",
+      success: true,
+      req,
+      res,
+    });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: error.message });
+    handleResponse({
+      payload: error,
+      handler: "AUTH_CODES_HANDLER",
+      success: false,
+      req,
+      res,
+    });
   }
 };
 

@@ -103,7 +103,7 @@ exports.refreshToken = async (userId, refreshToken) => {
     const { accessToken, refreshToken: newRefreshToken } = generateTokens(user);
 
     // Optionally, update the refresh token in Redis
-    await redisClient.set(userId.toString(), newRefreshToken, {
+    await redisClient.set(session_store(userId), newRefreshToken, {
       EX: 15 * 60, // Set an expiry, e.g., 15 mins in seconds
     });
 

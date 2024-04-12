@@ -14,7 +14,7 @@ paths:
   /auth/otp/verify:
     $ref: "./paths/auth.yaml#/~1verify-signin-otp"
   /auth/token/refresh:
-    $ref: "./paths/refreshToken.yaml"
+    $ref: "./paths/auth.yaml#/~1refresh-token"
 components:
   schemas:
     User:

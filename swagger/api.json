@@ -314,6 +314,11 @@
       "post": {
         "summary": "Refresh access token",
         "description": "Refreshes the access token using the provided refresh token and user ID.",
+        "tags": [
+          [
+            "Authentication"
+          ]
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -321,15 +326,11 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "userId": {
-                    "type": "string"
-                  },
                   "refreshToken": {
                     "type": "string"
                   }
                 },
                 "required": [
-                  "userId",
                   "refreshToken"
                 ]
               }
