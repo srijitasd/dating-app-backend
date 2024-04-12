@@ -121,6 +121,15 @@ exports.updateAgeRangePref = async (req, res) => {
       res,
     });
   } catch (error) {
+    handleResponse({
+      payload: error,
+      handler: "PROFILE_CODE_HANDLER",
+      success: false,
+      req,
+      res,
+    });
+  }
+};
 
 exports.updateMaxDistancePref = async (req, res) => {
   try {
