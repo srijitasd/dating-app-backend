@@ -95,6 +95,35 @@ exports.updateAge = async (req, res) => {
     });
   }
 };
+
+exports.updateAgeRangePref = async (req, res) => {
+  try {
+    const { id } = req.user; // Assuming your authentication middleware adds the user ID to req.user
+    const { min, max } = req.body.ageRange;
+
+    const user = await updateAgeRangePref(id, min, max);
+
+    res.json({
+      message: "Age range updated successfully",
+      user,
+    });
+
+    handleResponse({
+      payload: {
+        status: 200,
+        code: "PROFILE_S004",
+        data: { message: "Age range updated successfully", user },
+      },
+      handler: "PROFILE_CODE_HANDLER",
+      success: true,
+      req,
+      res,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server error.");
+  }
+};
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
