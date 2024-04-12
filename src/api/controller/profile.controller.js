@@ -132,7 +132,7 @@ exports.updateMaxDistancePref = async (req, res) => {
     handleResponse({
       payload: {
         status: 200,
-        code: "PROFILE_S004",
+        code: "PROFILE_S005",
         data: { message: "Max distance updated successfully", user },
       },
       handler: "PROFILE_CODE_HANDLER",
