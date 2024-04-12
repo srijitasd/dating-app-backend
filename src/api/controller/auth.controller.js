@@ -2,7 +2,12 @@ const { registerUserSchema } = require("../model/requestSchema/user.schema");
 
 const UserService = require("../service/auth.service");
 
-const { generateTokens } = require("../../lib/authenticator/functions");
+const { sendEmail } = require("../../utils/mailer/mailer");
+
+const {
+  welcome_body,
+  signin_otp,
+} = require("../../constants/emailTemplates/functions");
 
 exports.registerUser = async (req, res) => {
   try {
@@ -11,6 +16,15 @@ exports.registerUser = async (req, res) => {
     const { user, accessToken, refreshToken } = await UserService.createUser(
       req.body
     );
+
+    const mailOptions = {
+      from: "The Idea project",
+      to: req.body.email,
+      subject: "Welcome to Dating App!",
+      html: welcome_body(req.body),
+    };
+
+    await sendEmail(mailOptions);
 
     res.status(201).json({ user, accessToken, refreshToken });
   } catch (error) {
