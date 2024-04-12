@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema(
         min: { type: Number, min: 18, default: 18 },
         max: { type: Number, min: 18, default: 100 },
       }, // Desired age range for potential matches
+      maxDistance: {
+        unit: { type: String, enum: ["km", "mi"], default: "km" },
+        value: { type: Number, min: 0, default: 100 },
+      }, // Maximum distance for potential matches in meters
     },
     location: {
       type: { type: String, enum: ["Point"], required: true, default: "Point" },

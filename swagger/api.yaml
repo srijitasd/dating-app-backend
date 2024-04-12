@@ -26,6 +26,9 @@ paths:
     $ref: "./paths/profile.yaml#/~1update-dob-and-age"
   /profile/preference/age-range:
     $ref: "./paths/profile.yaml#/~1update-age-range-preference"
+  /profile/preference/max-distance:
+    $ref: "./paths/profile.yaml#/~1update-max-distance-preference"
+
 components:
   schemas:
     User:

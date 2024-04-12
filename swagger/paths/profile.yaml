@@ -158,3 +158,48 @@
         description: Unauthorized
       "500":
         description: Internal Server Error
+
+/update-max-distance-preference:
+  patch:
+    summary: Update user's maximum distance preference
+    tags:
+      - ["Profile Preference"]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              maxDistance:
+                type: object
+                properties:
+                  unit:
+                    type: string
+                    enum: ["km", "mi"]
+                    description: Unit of maximum distance
+                  value:
+                    type: number
+                    minimum: 0
+                    description: Maximum distance value
+    security:
+      - bearerAuth: []
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: A confirmation message
+                user:
+                  $ref: "../components/schemas/user.yaml"
+      "400":
+        description: Bad Request
+      "401":
+        description: Unauthorized
+      "500":
+        description: Internal Server Error

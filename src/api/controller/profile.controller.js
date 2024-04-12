@@ -3,6 +3,7 @@ const {
   reorderProfilePicture,
   updateAge,
   updateAgeRangePref,
+  updateMaxDistancePref,
 } = require("../service/profile.service");
 
 const { handleResponse } = require("../../utils/response_generator/functions");
@@ -120,8 +121,33 @@ exports.updateAgeRangePref = async (req, res) => {
       res,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Server error.");
+
+exports.updateMaxDistancePref = async (req, res) => {
+  try {
+    const { id } = req.user; // Assuming authentication middleware adds the user ID to req.user
+    const { unit, value } = req.body.maxDistance;
+
+    const user = await updateMaxDistancePref(id, unit, value);
+
+    handleResponse({
+      payload: {
+        status: 200,
+        code: "PROFILE_S004",
+        data: { message: "Max distance updated successfully", user },
+      },
+      handler: "PROFILE_CODE_HANDLER",
+      success: true,
+      req,
+      res,
+    });
+  } catch (error) {
+    handleResponse({
+      payload: error,
+      handler: "PROFILE_CODE_HANDLER",
+      success: false,
+      req,
+      res,
+    });
   }
 };
   } catch (error) {

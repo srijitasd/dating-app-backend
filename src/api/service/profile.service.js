@@ -118,3 +118,27 @@ exports.updateAgeRangePref = async (id, min, max) => {
     throw error;
   }
 };
+
+exports.updateMaxDistancePref = async (id, unit, value) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          "preferences.maxDistance": { unit, value },
+        },
+      },
+      { new: true } // This option returns the modified document rather than the original
+    );
+
+    if (!updatedUser) {
+      throw { message: "User not found." };
+    }
+
+    req.user = updatedUser;
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+};
+

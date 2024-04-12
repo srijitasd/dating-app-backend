@@ -5,6 +5,7 @@ const {
   uploadProfileImage,
   reorderProfilePictures,
   updateAgeRangePref,
+  updateMaxDistancePref,
 } = require("../controller/profile.controller");
 
 const Router = require("express").Router();
@@ -28,5 +29,11 @@ Router.patch(
   "/profile/preference/age-range",
   authenticateToken,
   updateAgeRangePref
+);
+
+Router.patch(
+  "/profile/preference/max-distance",
+  authenticateToken,
+  updateMaxDistancePref
 );
 module.exports = Router;
