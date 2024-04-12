@@ -82,13 +82,89 @@
                       "properties": {
                         "id": {
                           "type": "string",
-                          "description": "The user ID"
+                          "description": "The user ID",
+                          "example": "660a7a7cd27679ae0fb8b549"
                         },
                         "name": {
-                          "type": "string"
+                          "type": "string",
+                          "example": "John"
                         },
                         "email": {
-                          "type": "string"
+                          "type": "string",
+                          "example": "John@example.com"
+                        },
+                        "images": {
+                          "type": "array",
+                          "description": "List of reordered images",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "file": {
+                                "type": "string",
+                                "example": "https://image.example.com"
+                              },
+                              "index": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        },
+                        "dob": {
+                          "type": "date",
+                          "example": "2001/03/29"
+                        },
+                        "age": {
+                          "type": "number",
+                          "example": 18
+                        },
+                        "preferences": {
+                          "type": "object",
+                          "properties": {
+                            "interests": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "description": "List of user interests"
+                            },
+                            "ageRange": {
+                              "type": "object",
+                              "properties": {
+                                "min": {
+                                  "type": "integer",
+                                  "minimum": 18,
+                                  "default": 18,
+                                  "description": "Minimum age in the range"
+                                },
+                                "max": {
+                                  "type": "integer",
+                                  "minimum": 18,
+                                  "default": 100,
+                                  "description": "Maximum age in the range"
+                                }
+                              }
+                            },
+                            "maxDistance": {
+                              "type": "object",
+                              "properties": {
+                                "unit": {
+                                  "type": "string",
+                                  "enum": [
+                                    "km",
+                                    "mi"
+                                  ],
+                                  "default": "km",
+                                  "description": "Unit of maximum distance"
+                                },
+                                "value": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "default": 100,
+                                  "description": "Maximum distance value"
+                                }
+                              }
+                            }
+                          }
                         }
                       }
                     },
@@ -104,7 +180,19 @@
             }
           },
           "400": {
-            "$ref": "#/paths/~1auth~1login/post/responses/400"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
