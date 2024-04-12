@@ -142,3 +142,21 @@ exports.updateMaxDistancePref = async (id, unit, value) => {
   }
 };
 
+exports.updateLocation = async (id, latitude, longitude) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { $set: { "location.coordinates": [longitude, latitude] } }, // MongoDB expects coordinates in [longitude, latitude] order
+      { new: true } // Return the modified document rather than the original
+    );
+
+    if (!updatedUser) {
+      throw { message: "User not found." };
+    }
+
+    req.user = updatedUser;
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+};

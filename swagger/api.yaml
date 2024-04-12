@@ -24,6 +24,8 @@ paths:
     $ref: "./paths/profile.yaml#/~1reorder-profile-picture"
   /profile/update-age:
     $ref: "./paths/profile.yaml#/~1update-dob-and-age"
+  /profile/update-location:
+    $ref: "./paths/profile.yaml#/~1update-location"
   /profile/preference/age-range:
     $ref: "./paths/profile.yaml#/~1update-age-range-preference"
   /profile/preference/max-distance:

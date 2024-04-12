@@ -203,3 +203,43 @@
         description: Unauthorized
       "500":
         description: Internal Server Error
+
+/update-location:
+  patch:
+    summary: Update user's location
+    tags:
+      - ["Profile"]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              latitude:
+                type: number
+                description: Latitude of the user's location
+              longitude:
+                type: number
+                description: Longitude of the user's location
+    security:
+      - bearerAuth: []
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: A confirmation message
+                user:
+                  $ref: "../components/schemas/user.yaml"
+      "400":
+        description: Bad Request
+      "401":
+        description: Unauthorized
+      "500":
+        description: Internal Server Error

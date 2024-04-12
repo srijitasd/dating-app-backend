@@ -4,6 +4,7 @@ const {
   updateAge,
   updateAgeRangePref,
   updateMaxDistancePref,
+  updateLocation,
 } = require("../service/profile.service");
 
 const { handleResponse } = require("../../utils/response_generator/functions");
@@ -159,7 +160,32 @@ exports.updateMaxDistancePref = async (req, res) => {
     });
   }
 };
+
+exports.updateLocation = async (req, res) => {
+  try {
+    const { id } = req.user; // Assuming authentication middleware adds the user ID to req.user
+    const { latitude, longitude } = req.body;
+
+    const user = await updateLocation(id, latitude, longitude);
+
+    handleResponse({
+      payload: {
+        status: 200,
+        code: "PROFILE_S006",
+        data: { message: "Location updated successfully", user },
+      },
+      handler: "PROFILE_CODE_HANDLER",
+      success: true,
+      req,
+      res,
+    });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    handleResponse({
+      payload: error,
+      handler: "PROFILE_CODE_HANDLER",
+      success: false,
+      req,
+      res,
+    });
   }
 };
