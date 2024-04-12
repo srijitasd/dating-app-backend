@@ -52,19 +52,41 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-exports.login = async (req, res) => {
+exports.getSigninOTP = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await UserService.authenticateUser(email, password);
-    const { accessToken, refreshToken } = generateTokens(user);
+    const { email } = req.body;
+    const { user, otp } = await UserService.getSigninOTP(email);
 
-    // Store refreshToken in Redis with the user ID as the key
-    await redisClient.set(user.id.toString(), refreshToken, {
-      EX: 15 * 60, // Set an expiry, e.g., 15 mins in seconds
-      NX: true, // Set only if the key does not exist
+    const mailOptions = {
+      from: "The Idea project",
+      to: req.body.email,
+      subject: "Welcome to Dating App!",
+      html: signin_otp({ user, otp }),
+    };
+
+    await sendEmail(mailOptions);
+
+    handleResponse({
+      payload: {
+        status: 200,
+        code: "AUTH_S002",
+      },
+      handler: "AUTH_CODES_HANDLER",
+      success: true,
+      req,
+      res,
     });
-
-    res.json({ accessToken, refreshToken });
+  } catch (error) {
+    console.log(error);
+    handleResponse({
+      payload: error,
+      handler: "AUTH_CODES_HANDLER",
+      success: false,
+      req,
+      res,
+    });
+  }
+};
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

@@ -197,10 +197,14 @@
         }
       }
     },
-    "/auth/login": {
+    "/auth/otp/generate": {
       "post": {
-        "summary": "Log in a user",
-        "description": "Authenticates the user with email and password, then returns access and refresh tokens.",
+        "summary": "Send OTP to registered email address",
+        "tags": [
+          [
+            "Authentication"
+          ]
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -209,33 +213,25 @@
                 "type": "object",
                 "properties": {
                   "email": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "email"
                   }
-                },
-                "required": [
-                  "email",
-                  "password"
-                ]
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Login successful",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "accessToken": {
-                      "type": "string"
-                    },
-                    "refreshToken": {
-                      "type": "string"
+                    "message": {
+                      "type": "string",
+                      "description": "A confirmation message"
                     }
                   }
                 }
@@ -243,7 +239,14 @@
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
             "content": {
               "application/json": {
                 "schema": {

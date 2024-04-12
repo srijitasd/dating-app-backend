@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
       maxDistance: Number, // Maximum distance for potential matches in meters
     },
     location: {
-      type: { type: String, enum: ["Point"], required: true },
+      type: { type: String, enum: ["Point"], required: true, default: "Point" },
       coordinates: { type: [Number], required: true }, // [longitude, latitude]
     },
   },

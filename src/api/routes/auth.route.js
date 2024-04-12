@@ -6,6 +6,8 @@ const { authenticateToken } = require("../../lib/authenticator/middlewares");
 
 Router.post("/register", userController.registerUser);
 
+Router.post("/otp/generate", userController.getSigninOTP);
+
 Router.post("/token/refresh", authenticateToken, userController.refreshToken);
 
 Router.post("/logout", userController.logout);

@@ -9,6 +9,8 @@ servers:
 paths:
   /auth/register:
     $ref: "./paths/auth.yaml#/~1register-user"
+  /auth/otp/generate:
+    $ref: "./paths/auth.yaml#/~1generate-signin-otp"
   /auth/token/refresh:
     $ref: "./paths/refreshToken.yaml"
 components:

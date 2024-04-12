@@ -5,6 +5,7 @@ const {
 } = require("../../constants/redis/naming_convention.redis");
 
 const { generateTokens } = require("../../lib/authenticator/functions");
+const { generate_otp } = require("../../lib/otp_generator/functions");
 
 const { User } = require("../model/mongodb/user.model");
 
@@ -22,6 +23,34 @@ exports.createUser = async (user_data) => {
     });
 
     return { user, accessToken, refreshToken };
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.getSigninOTP = async (user_data) => {
+  try {
+    const doesUserExists = await User.findOne({
+      email: user_data.email,
+    }).select("name email");
+    if (!doesUserExists) {
+      throw {
+        message: "user not found!",
+      };
+    }
+
+    const OTP = generate_otp();
+
+    await redisClient.set(
+      signin_otp_store(doesUserExists._id.toString()),
+      OTP,
+      {
+        EX: 1 * 60, // Set an expiry, e.g., 15 mins in seconds
+        NX: true, // Set only if the key does not exist
+      }
+    );
+
+    return { user: doesUserExists, otp: OTP };
   } catch (error) {
     throw error;
   }
