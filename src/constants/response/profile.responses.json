@@ -1,0 +1,14 @@
+{
+    "en": {
+        "PROFILE_S001": "Image uploaded successfully",
+        "PROFILE_S002": "OTP sent to your registered email address",
+        "PROFILE_S003": "Sign in successful!",
+        "PROFILE_S004": "Refresh token generated successfully!",
+        "PROFILE_S005": "Logged out successfully!",
+        "PROFILE_E001": "Something went wrong",
+        "PROFILE_E002": "user not found!",
+        "PROFILE_E003": "OTP expired!",
+        "PROFILE_E004": "Token invalid or expired",
+        "PROFILE_E005": "Schema validation failed!"
+    }
+}

@@ -18,6 +18,8 @@ paths:
   /auth/logout:
     $ref: "./paths/auth.yaml#/~1logout"
 
+  /profile/upload-image:
+    $ref: "./paths/profile.yaml#/~1upload-profile-picture"
 components:
   schemas:
     User:
