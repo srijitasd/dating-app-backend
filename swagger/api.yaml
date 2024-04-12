@@ -22,6 +22,8 @@ paths:
     $ref: "./paths/profile.yaml#/~1upload-profile-picture"
   /profile/reorder-image:
     $ref: "./paths/profile.yaml#/~1reorder-profile-picture"
+  /profile/update-age:
+    $ref: "./paths/profile.yaml#/~1update-dob-and-age"
 components:
   schemas:
     User:

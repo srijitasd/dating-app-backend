@@ -3,7 +3,9 @@ const { profileMulter } = require("../../utils/multer/multer");
 
 const {
   uploadProfileImage,
+  updateAgeRangePref,
 } = require("../controller/profile.controller");
+
 const Router = require("express").Router();
 
 Router.post(
@@ -18,4 +20,6 @@ Router.patch(
   authenticateToken,
   reorderProfilePictures
 );
+
+Router.patch("/profile/update-age", authenticateToken, reorderProfilePictures);
 module.exports = Router;

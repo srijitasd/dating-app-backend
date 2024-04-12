@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema(
         index: Number, // Used to order images
       },
     ],
+    dob: Date,
     age: Number,
     preferences: {
       interests: [String], // List of user interests

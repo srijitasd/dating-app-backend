@@ -71,3 +71,25 @@ exports.reorderProfilePicture = async (id, image) => {
     throw error;
   }
 };
+
+exports.updateAge = async (id, dobDate, age) => {
+  try {
+    // Update the user's DOB and age in the database
+    const updatedUser = await User.findByIdAndUpdate(id, {
+      dob: dobDate,
+      age: age,
+    });
+
+    if (!updatedUser) {
+      throw {
+        message: "User not found",
+      };
+    }
+
+    req.user = updatedUser;
+
+    return req.user;
+  } catch (error) {
+    throw error;
+  }
+};

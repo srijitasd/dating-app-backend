@@ -1,6 +1,7 @@
 const {
   uploadProfilePicture,
   reorderProfilePicture,
+  updateAge,
 } = require("../service/profile.service");
 
 const { handleResponse } = require("../../utils/response_generator/functions");
@@ -45,6 +46,38 @@ exports.reorderProfilePictures = async (req, res) => {
         status: 200,
         code: "PROFILE_S002",
         data: { message: "Image reordered successfully", user },
+      },
+      handler: "PROFILE_CODE_HANDLER",
+      success: true,
+      req,
+      res,
+    });
+  } catch (error) {
+    handleResponse({
+      payload: error,
+      handler: "PROFILE_CODE_HANDLER",
+      success: false,
+      req,
+      res,
+    });
+  }
+};
+
+exports.updateAge = async (req, res) => {
+  try {
+    const { id } = req.user; // Assuming the auth middleware sets req.user
+    const { dob } = req.body; // Expecting 'dob' in the format 'YYYY-MM-DD'
+
+    const dobDate = new Date(dob);
+    const age = calculateAge(dobDate);
+
+    const user = await updateAge(id, dobDate, age);
+
+    handleResponse({
+      payload: {
+        status: 200,
+        code: "PROFILE_S003",
+        data: { message: "DOB and age updated successfully", user },
       },
       handler: "PROFILE_CODE_HANDLER",
       success: true,

@@ -77,3 +77,41 @@
       "500":
         description: Internal Server Error
 
+/update-dob-and-age:
+  patch:
+    summary: Update user's date of birth and age
+    tags:
+      - ["Profile"]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              dob:
+                type: string
+                format: date
+                description: Date of birth in 'YYYY-MM-DD' format
+    security:
+      - bearerAuth: []
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: A confirmation message
+                  example: DOB and age updated successfully
+                user:
+                  $ref: "../components/schemas/user.yaml"
+      "400":
+        description: Bad Request
+      "401":
+        description: Unauthorized
+      "500":
+        description: Internal Server Error
