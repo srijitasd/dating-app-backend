@@ -8,6 +8,7 @@ const {
   welcome_body,
   signin_otp,
 } = require("../../constants/emailTemplates/functions");
+const { handleResponse } = require("../../utils/response_generator/functions");
 
 exports.registerUser = async (req, res) => {
   try {
@@ -27,8 +28,27 @@ exports.registerUser = async (req, res) => {
     await sendEmail(mailOptions);
 
     res.status(201).json({ user, accessToken, refreshToken });
+
+    handleResponse({
+      payload: {
+        status: 201,
+        code: "AUTH_S001",
+        data: { user, accessToken, refreshToken },
+      },
+      handler: "AUTH_CODES_HANDLER",
+      success: true,
+      req,
+      res,
+    });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.log(error);
+    handleResponse({
+      payload: error,
+      handler: "AUTH_CODES_HANDLER",
+      success: false,
+      req,
+      res,
+    });
   }
 };
 

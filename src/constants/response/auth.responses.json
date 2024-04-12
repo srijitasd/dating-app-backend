@@ -1,0 +1,14 @@
+{
+    "en": {
+        "AUTH_S001": "Sign up successful!",
+        "AUTH_S002": "OTP sent to your registered email address",
+        "AUTH_S003": "Sign in successful!",
+        "AUTH_S004": "Refresh token generated successfully!",
+        "AUTH_S005": "Logged out successfully!",
+        "AUTH_E001": "Something went wrong",
+        "AUTH_E002": "user not found!",
+        "AUTH_E003": "OTP expired!",
+        "AUTH_E004": "Token invalid or expired",
+        "AUTH_E005": "Schema validation failed!"
+    }
+}
