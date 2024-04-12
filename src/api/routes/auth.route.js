@@ -14,8 +14,4 @@ Router.post("/token/refresh", authenticateToken, userController.refreshToken);
 
 Router.get("/logout", authenticateToken, userController.logout);
 
-Router.get("/protected", authenticateToken, (req, res) => {
-  res.json({ message: "You're accessing a protected route!", user: req.user });
-});
-
 module.exports = Router;
