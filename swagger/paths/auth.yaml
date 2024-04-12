@@ -81,3 +81,43 @@
       "500":
         description: Internal Server Error
 
+/verify-signin-otp:
+  post:
+    summary: Verify OTP and return tokens
+    tags:
+      - ["Authentication"]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+              otp:
+                type: string
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  $ref: "../components/schemas/user.yaml"
+                accessToken:
+                  type: string
+                  description: Access token
+                refreshToken:
+                  type: string
+                  description: Refresh token
+      "400":
+        description: Bad Request
+      "401":
+        description: Unauthorized
+      "500":
+        description: Internal Server Error
+

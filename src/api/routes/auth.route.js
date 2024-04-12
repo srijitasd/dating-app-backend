@@ -8,6 +8,8 @@ Router.post("/register", userController.registerUser);
 
 Router.post("/otp/generate", userController.getSigninOTP);
 
+Router.post("/otp/verify", userController.verifyOTP);
+
 Router.post("/token/refresh", authenticateToken, userController.refreshToken);
 
 Router.post("/logout", userController.logout);

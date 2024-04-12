@@ -11,6 +11,8 @@ paths:
     $ref: "./paths/auth.yaml#/~1register-user"
   /auth/otp/generate:
     $ref: "./paths/auth.yaml#/~1generate-signin-otp"
+  /auth/otp/verify:
+    $ref: "./paths/auth.yaml#/~1verify-signin-otp"
   /auth/token/refresh:
     $ref: "./paths/refreshToken.yaml"
 components:

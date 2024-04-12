@@ -56,6 +56,42 @@ exports.getSigninOTP = async (user_data) => {
   }
 };
 
+exports.verifyOTP = async (user_data) => {
+  try {
+    // Retrieve OTP from Redis
+    const storedOTP = await redisClient.get(signin_otp_store(user_data.email));
+    if (!storedOTP || storedOTP !== user_data.otp) {
+      throw { message: "OTP expired" };
+    }
+
+    const doesUserExists = await User.findOne({
+      email: user_data.email,
+    }).select("name email");
+    if (!doesUserExists) {
+      throw {
+        message: "user not found!",
+      };
+    }
+
+    const { accessToken, refreshToken } = generateTokens(doesUserExists);
+
+    await redisClient.del(signin_otp_store(user_data.email));
+
+    await redisClient.set(
+      session_store(doesUserExists._id.toString()),
+      refreshToken,
+      {
+        EX: 15 * 60, // Set an expiry, e.g., 15 mins in seconds
+        NX: true, // Set only if the key does not exist
+      }
+    );
+
+    return { user: doesUserExists, accessToken, refreshToken };
+  } catch (error) {
+    throw error;
+  }
+};
+
 exports.refreshToken = async (userId, refreshToken) => {
   try {
     const storedToken = await redisClient.get(userId.toString());

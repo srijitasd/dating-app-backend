@@ -87,8 +87,32 @@ exports.getSigninOTP = async (req, res) => {
     });
   }
 };
+
+exports.verifyOTP = async (req, res) => {
+  try {
+    const { user, accessToken, refreshToken } = await UserService.verifyOTP(
+      req.body
+    );
+
+    handleResponse({
+      payload: {
+        status: 200,
+        code: "AUTH_S003",
+        data: { user, accessToken, refreshToken },
+      },
+      handler: "AUTH_CODES_HANDLER",
+      success: true,
+      req,
+      res,
+    });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    handleResponse({
+      payload: error,
+      handler: "AUTH_CODES_HANDLER",
+      success: false,
+      req,
+      res,
+    });
   }
 };
 
