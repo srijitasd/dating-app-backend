@@ -10,7 +10,7 @@ const authenticateToken = (req, res, next) => {
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403); // Token is invalid or expired
 
-    req.user = user; // Attach the user payload to the request
+    if (!req.user) req.user = user;
     next(); // Continue to the next middleware or route handler
   });
 };
