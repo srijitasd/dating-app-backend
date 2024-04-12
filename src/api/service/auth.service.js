@@ -112,3 +112,11 @@ exports.refreshToken = async (userId, refreshToken) => {
     throw error;
   }
 };
+
+exports.logoutUser = async (userId) => {
+  try {
+    await redisClient.del(session_store(userId));
+  } catch (error) {
+    throw error;
+  }
+};

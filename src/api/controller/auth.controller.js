@@ -150,12 +150,30 @@ exports.refreshToken = async (req, res) => {
 };
 
 exports.logout = async (req, res) => {
-  const { userId } = req.body;
   try {
-    // Remove the user's refresh token to effectively log them out
-    await redisClient.del(userId.toString());
+    const { id } = req.user;
+
+    await UserService.logoutUser(id);
+
+    handleResponse({
+      payload: {
+        status: 200,
+        code: "AUTH_S005",
+      },
+      handler: "AUTH_CODES_HANDLER",
+      success: true,
+      req,
+      res,
+    });
+
     res.json({ message: "Logged out successfully" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    handleResponse({
+      payload: error,
+      handler: "AUTH_CODES_HANDLER",
+      success: false,
+      req,
+      res,
+    });
   }
 };

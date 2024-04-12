@@ -12,7 +12,7 @@ Router.post("/otp/verify", userController.verifyOTP);
 
 Router.post("/token/refresh", authenticateToken, userController.refreshToken);
 
-Router.post("/logout", userController.logout);
+Router.get("/logout", authenticateToken, userController.logout);
 
 Router.get("/protected", authenticateToken, (req, res) => {
   res.json({ message: "You're accessing a protected route!", user: req.user });
