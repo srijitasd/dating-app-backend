@@ -2,6 +2,7 @@ const {
   uploadProfilePicture,
   reorderProfilePicture,
   updateAge,
+  updateAgeRangePref,
 } = require("../service/profile.service");
 
 const { handleResponse } = require("../../utils/response_generator/functions");

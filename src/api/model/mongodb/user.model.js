@@ -16,8 +16,10 @@ const userSchema = new mongoose.Schema(
     age: Number,
     preferences: {
       interests: [String], // List of user interests
-      ageRange: { min: Number, max: Number }, // Desired age range for potential matches
-      maxDistance: Number, // Maximum distance for potential matches in meters
+      ageRange: {
+        min: { type: Number, min: 18, default: 18 },
+        max: { type: Number, min: 18, default: 100 },
+      }, // Desired age range for potential matches
     },
     location: {
       type: { type: String, enum: ["Point"], required: true, default: "Point" },

@@ -115,3 +115,46 @@
         description: Unauthorized
       "500":
         description: Internal Server Error
+
+/update-age-range-preference:
+  patch:
+    summary: Update user's age range preference
+    tags:
+      - ["Profile Preference"]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ageRange:
+                type: object
+                properties:
+                  min:
+                    type: integer
+                    description: Minimum age in the range
+                  max:
+                    type: integer
+                    description: Maximum age in the range
+    security:
+      - bearerAuth: []
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: A confirmation message
+                user:
+                  $ref: "../components/schemas/user.yaml"
+      "400":
+        description: Bad Request
+      "401":
+        description: Unauthorized
+      "500":
+        description: Internal Server Error

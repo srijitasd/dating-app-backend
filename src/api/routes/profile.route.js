@@ -23,4 +23,10 @@ Router.patch(
 );
 
 Router.patch("/profile/update-age", authenticateToken, reorderProfilePictures);
+
+Router.patch(
+  "/profile/preference/age-range",
+  authenticateToken,
+  updateAgeRangePref
+);
 module.exports = Router;

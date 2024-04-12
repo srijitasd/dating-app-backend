@@ -93,3 +93,28 @@ exports.updateAge = async (id, dobDate, age) => {
     throw error;
   }
 };
+
+exports.updateAgeRangePref = async (id, min, max) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          "preferences.ageRange": { min, max },
+        },
+      },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedUser) {
+      throw {
+        message: "User not found",
+      };
+    }
+
+    req.user = updatedUser;
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+};

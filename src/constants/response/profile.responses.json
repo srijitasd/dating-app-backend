@@ -3,7 +3,7 @@
         "PROFILE_S001": "Image uploaded successfully",
         "PROFILE_S002": "Image reordered successfully",
         "PROFILE_S003": "Sign in successful!",
-        "PROFILE_S004": "Refresh token generated successfully!",
+        "PROFILE_S004": "Age range updated successfully",
         "PROFILE_S005": "Logged out successfully!",
         "PROFILE_E001": "Something went wrong",
         "PROFILE_E002": "user not found!",
