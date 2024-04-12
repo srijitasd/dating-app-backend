@@ -27,3 +27,47 @@ exports.uploadProfilePicture = async (id, image) => {
     throw error;
   }
 };
+
+exports.reorderProfilePicture = async (id, image) => {
+  try {
+    const user = await User.findById(id);
+
+    if (!user) {
+      throw {
+        message: "User not found",
+      };
+    }
+
+    // Find the image to reorder
+    const imageToReorder = user.images.find(
+      (image) => image._id.toString() === image.id
+    );
+
+    if (!imageToReorder) {
+      throw {
+        message: "Image not found",
+      };
+    }
+
+    // Remove the image from its current position
+    user.images = user.images.filter(
+      (image) => image._id.toString() !== image.id
+    );
+
+    // Insert the image at the new index
+    user.images.splice(image.newIndex, 0, imageToReorder);
+
+    // Optionally: Normalize the indices (This step is not strictly necessary if you only use the array order)
+    user.images.forEach((image, index) => {
+      image.index = index;
+    });
+
+    // Save the updated user document
+    await user.save();
+    req.user = user;
+
+    return req.user;
+  } catch (error) {
+    throw error;
+  }
+};

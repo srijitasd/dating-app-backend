@@ -20,6 +20,8 @@ paths:
 
   /profile/upload-image:
     $ref: "./paths/profile.yaml#/~1upload-profile-picture"
+  /profile/reorder-image:
+    $ref: "./paths/profile.yaml#/~1reorder-profile-picture"
 components:
   schemas:
     User:

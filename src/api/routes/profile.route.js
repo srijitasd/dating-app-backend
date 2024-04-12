@@ -12,4 +12,10 @@ Router.post(
   profileMulter.single("image"),
   uploadProfileImage
 );
+
+Router.patch(
+  "/profile/reorder-image",
+  authenticateToken,
+  reorderProfilePictures
+);
 module.exports = Router;

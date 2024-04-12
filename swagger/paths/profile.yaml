@@ -35,3 +35,45 @@
         description: Unauthorized
       "500":
         description: Internal Server Error
+
+/reorder-profile-picture:
+  patch:
+    summary: Reorder profile picture
+    tags:
+      - ["Profile"]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              imageId:
+                type: string
+                description: The ID of the image to reorder
+              newIndex:
+                type: integer
+                description: The new index of the image
+    security:
+      - bearerAuth: []
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: A confirmation message
+                  example: Image reordered successfully
+                user:
+                  $ref: "../components/schemas/user.yaml"
+      "400":
+        description: Bad Request
+      "401":
+        description: Unauthorized
+      "500":
+        description: Internal Server Error
+

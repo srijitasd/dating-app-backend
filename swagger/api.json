@@ -483,6 +483,72 @@
         }
       }
     },
+    "/profile/reorder-image": {
+      "patch": {
+        "summary": "Reorder profile picture",
+        "tags": [
+          [
+            "Profile"
+          ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "imageId": {
+                    "type": "string",
+                    "description": "The ID of the image to reorder"
+                  },
+                  "newIndex": {
+                    "type": "integer",
+                    "description": "The new index of the image"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "A confirmation message",
+                      "example": "Image reordered successfully"
+                    },
+                    "user": {
+                      "$ref": "#/paths/~1auth~1register/post/responses/201/content/application~1json/schema/properties/user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     }
   },
   "components": {
