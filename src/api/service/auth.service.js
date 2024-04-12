@@ -94,7 +94,7 @@ exports.verifyOTP = async (user_data) => {
 
 exports.refreshToken = async (userId, refreshToken) => {
   try {
-    const storedToken = await redisClient.get(userId.toString());
+    const storedToken = await redisClient.get(session_store(userId));
     if (!storedToken || storedToken !== refreshToken) {
       throw { message: "Token invalid or expired" };
     }
