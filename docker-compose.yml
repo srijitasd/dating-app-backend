@@ -1,0 +1,33 @@
+version: "3.9"
+name: "dating-app"
+services:
+       mongo:
+             container_name: mongo
+             image: mongo
+             volumes:
+               - ./data:/data/db
+             ports:
+               - '27017:27017'
+             networks:
+               - app-network
+       dating-app:
+           build:
+             context: ./
+           volumes:
+             - ./:/usr/src/app
+             - /usr/src/app/node_modules
+           command:
+             - nodemon
+             - --legacy-watch
+             - app.js
+           container_name: dating-app-container
+           image: dating-app-backend
+           restart: always
+           ports:
+             - "3000:3000"
+           links:
+             - mongo
+           networks:
+             - app-network
+networks:
+  app-network:

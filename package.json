@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "env-cmd -f ./.env nodemon app.js",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "doc:generate": "swagger-cli bundle swagger/api.yaml --outfile swagger/api.json"
   },
   "author": "",
