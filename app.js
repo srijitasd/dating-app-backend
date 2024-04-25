@@ -7,6 +7,7 @@ require("./src/config/redis.db");
 
 const authRoutes = require("./src/api/routes/auth.route");
 const profileRoutes = require("./src/api/routes/profile.route");
+const matcherRoutes = require("./src/api/routes/matcher.route");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,6 +22,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/matcher", matcherRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
