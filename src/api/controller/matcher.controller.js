@@ -33,3 +33,31 @@ exports.swipeController = async (req, res) => {
     });
   }
 };
+
+exports.nearByUsersController = async (req, res) => {
+  const { id } = req.user; // Assuming authentication middleware adds the user ID to req.user
+  const { limit = 25, offset = 0 } = req.query;
+  try {
+    const resp = await nearByUsersService(id, { limit, offset });
+
+    handleResponse({
+      payload: {
+        status: 200,
+        code: "MATCHER_S001",
+        data: resp,
+      },
+      handler: "MATCHER_CODE_HANDLER",
+      success: true,
+      req,
+      res,
+    });
+  } catch (error) {
+    handleResponse({
+      payload: error,
+      handler: "MATCHER_CODE_HANDLER",
+      success: false,
+      req,
+      res,
+    });
+  }
+};

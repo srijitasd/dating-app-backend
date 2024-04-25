@@ -7,5 +7,6 @@ const {
 } = require("../controller/matcher.controller");
 
 Router.post("/swipe", authenticateToken, swipeController);
+Router.get("/user/nearby", authenticateToken, nearByUsersController);
 
 module.exports = Router;

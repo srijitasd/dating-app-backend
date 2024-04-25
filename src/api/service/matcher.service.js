@@ -80,3 +80,66 @@ exports.swipeService = async (data) => {
     console.log("producer disconnected.........");
   }
 };
+
+exports.nearByUsersService = async (userId, query) => {
+  try {
+    const currentUser = await User.findById(userId);
+    if (!currentUser) {
+      throw {
+        message: "user not found!",
+      };
+    }
+
+    const preferences = currentUser.preferences;
+    // Use aggregation to exclude users already swiped on
+    const nearbyUsers = await User.aggregate([
+      {
+        $geoNear: {
+          near: {
+            type: "Point",
+            coordinates: currentUser.location.coordinates,
+          },
+          distanceField: "dist.calculated",
+          maxDistance:
+            preferences.maxDistance.unit == "mi"
+              ? preferences.maxDistance.value * 1609.34
+              : preferences.maxDistance.value * 1000,
+          spherical: true,
+        },
+      },
+      {
+        $skip: query.limit * query.offset,
+      },
+      {
+        $limit: query.limit,
+      },
+      {
+        $lookup: {
+          from: "swipes",
+          localField: "_id",
+          foreignField: "swipedId",
+          as: "swipes",
+        },
+      },
+      {
+        $match: {
+          $and: [
+            { _id: { $ne: currentUser._id } }, // Exclude current user
+            {
+              swipes: {
+                $not: {
+                  $elemMatch: { swiperId: mongoose.Types.ObjectId(userId) },
+                },
+              },
+            }, // Exclude swiped users
+          ],
+        },
+      },
+      { $project: { swipes: 0 } }, // Optionally remove the swipes field from the output
+    ]);
+
+    return nearbyUsers;
+  } catch (error) {
+    throw error;
+  }
+};
