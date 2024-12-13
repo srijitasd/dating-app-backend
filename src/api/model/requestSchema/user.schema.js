@@ -35,3 +35,9 @@ exports.registerUserSchema = Joi.object({
       "any.required": "Oops! location is required",
     }),
 });
+
+exports.verifyEmailSchema = Joi.object({
+  token: Joi.string().required().messages({
+    "any.required": "Verification token is required",
+  }),
+});

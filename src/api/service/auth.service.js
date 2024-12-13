@@ -1,26 +1,40 @@
+const jwt = require("jsonwebtoken");
+const { v4: uuidv4 } = require("uuid");
+
 const redisClient = require("../../config/redis.db");
+
 const {
   session_store,
   signin_otp_store,
+  email_verification_store,
 } = require("../../constants/redis/naming_convention.redis");
 
-const { generateTokens } = require("../../lib/authenticator/functions");
+const {
+  generateTokens,
+  generateEmailVerificationToken,
+  verifyRefreshToken,
+} = require("../../lib/authenticator/functions");
 const { generate_otp } = require("../../lib/otp_generator/functions");
 
 const { User } = require("../model/mongodb/user.model");
+const {
+  createSession,
+  refreshSession,
+  destroySession,
+  destroyAllSessions,
+} = require("./session.service");
 
-exports.createUser = async (user_data) => {
+exports.createUser = async (user_data, metadata) => {
   try {
     const user = new User(user_data);
 
     await user.save();
 
-    const { accessToken, refreshToken } = generateTokens(user);
-
-    await redisClient.set(session_store(user._id.toString()), refreshToken, {
-      EX: 15 * 60, // Set an expiry, e.g., 15 mins in seconds
-      NX: true, // Set only if the key does not exist
-    });
+    // const { accessToken, refreshToken } = generateTokens(user);
+    // await createSession(user, refreshToken, {
+    //   device: metadata.device,
+    //   ip: metadata.ip,
+    // });
 
     return { user, accessToken, refreshToken };
   } catch (error) {
@@ -28,13 +42,14 @@ exports.createUser = async (user_data) => {
   }
 };
 
-exports.getSigninOTP = async (user_data) => {
+exports.getSigninOTP = async (email) => {
   try {
     const doesUserExists = await User.findOne({
-      email: user_data.email,
+      email: email,
     }).select("name email");
     if (!doesUserExists) {
       throw {
+        userThrow: true,
         message: "user not found!",
       };
     }
@@ -44,10 +59,9 @@ exports.getSigninOTP = async (user_data) => {
     await redisClient.set(
       signin_otp_store(doesUserExists._id.toString()),
       OTP,
-      {
-        EX: 1 * 60, // Set an expiry, e.g., 15 mins in seconds
-        NX: true, // Set only if the key does not exist
-      }
+      "EX",
+      1 * 60,
+      "NX"
     );
 
     return { user: doesUserExists, otp: OTP };
@@ -56,67 +70,125 @@ exports.getSigninOTP = async (user_data) => {
   }
 };
 
-exports.verifyOTP = async (user_data) => {
+exports.verifyOTP = async (user_data, metadata) => {
   try {
-    // Retrieve OTP from Redis
-    const storedOTP = await redisClient.get(signin_otp_store(user_data.email));
-    if (!storedOTP || storedOTP !== user_data.otp) {
-      throw { message: "OTP expired" };
-    }
-
-    const doesUserExists = await User.findOne({
+    const user = await User.findOne({
       email: user_data.email,
     }).select("name email");
-    if (!doesUserExists) {
+    if (!user) {
       throw {
+        userThrow: true,
         message: "user not found!",
       };
     }
 
-    const { accessToken, refreshToken } = generateTokens(doesUserExists);
+    const storedOTP = await redisClient.get(signin_otp_store(user._id));
+
+    if (!storedOTP || storedOTP !== user_data.otp) {
+      throw { userThrow: true, message: "OTP expired" };
+    }
 
     await redisClient.del(signin_otp_store(user_data.email));
 
-    await redisClient.set(
-      session_store(doesUserExists._id.toString()),
-      refreshToken,
-      {
-        EX: 15 * 60, // Set an expiry, e.g., 15 mins in seconds
-        NX: true, // Set only if the key does not exist
-      }
-    );
-
-    return { user: doesUserExists, accessToken, refreshToken };
-  } catch (error) {
-    throw error;
-  }
-};
-
-exports.refreshToken = async (userId, refreshToken) => {
-  try {
-    const storedToken = await redisClient.get(session_store(userId));
-    if (!storedToken || storedToken !== refreshToken) {
-      throw { message: "Token invalid or expired" };
-    }
-
-    const user = { id: userId }; // Fetch user details as needed
-    const { accessToken, refreshToken: newRefreshToken } = generateTokens(user);
-
-    // Optionally, update the refresh token in Redis
-    await redisClient.set(session_store(userId), newRefreshToken, {
-      EX: 15 * 60, // Set an expiry, e.g., 15 mins in seconds
+    const jti = uuidv4();
+    const { accessToken, refreshToken } = generateTokens(user, jti);
+    await createSession(user, jti, refreshToken, {
+      device: metadata.device,
+      ip: metadata.ip,
     });
 
-    return { user, accessToken, refreshToken: newRefreshToken };
+    await redisClient.del(signin_otp_store(user._id));
+
+    return { user, accessToken, refreshToken };
   } catch (error) {
     throw error;
   }
 };
 
-exports.logoutUser = async (userId) => {
+exports.refreshToken = async (refreshToken) => {
   try {
-    await redisClient.del(session_store(userId));
+    const decoded = verifyRefreshToken(refreshToken);
+    if (!decoded) {
+      throw {
+        userThrow: true,
+        message: "user not found!",
+      };
+    }
+
+    const doesUserExists = await User.findById(decoded.id).select("name email");
+    if (!doesUserExists) {
+      throw {
+        userThrow: true,
+        message: "user not found!",
+      };
+    }
+
+    const {
+      user,
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    } = await refreshSession(doesUserExists._id, refreshToken);
+
+    return { user, accessToken: newAccessToken, refreshToken: newRefreshToken };
   } catch (error) {
+    throw error;
+  }
+};
+
+exports.logoutUser = async (userId, jti = undefined) => {
+  try {
+    if (jti) {
+      await destroySession(userId, jti);
+    } else {
+      await destroyAllSessions(userId);
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.generateEmailVerification = async (userId, email) => {
+  try {
+    const verificationToken = generateEmailVerificationToken(userId, email);
+
+    await redisClient.set(email_verification_store(userId), verificationToken, {
+      EX: 24 * 60 * 60, // 24 hours in seconds
+      NX: true,
+    });
+
+    return verificationToken;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.verifyEmail = async (token) => {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded.purpose !== "email_verification") {
+      throw { message: "Invalid verification token" };
+    }
+
+    const storedToken = await redisClient.get(
+      email_verification_store(decoded.userId)
+    );
+
+    if (!storedToken || storedToken !== token) {
+      throw { message: "Token expired or already used" };
+    }
+
+    await User.findByIdAndUpdate(decoded.userId, { email_verified: true });
+    await redisClient.del(email_verification_store(decoded.userId));
+
+    return { email_verified: true };
+  } catch (error) {
+    if (error.name === "JsonWebTokenError") {
+      throw { message: "Invalid token" };
+    }
+    if (error.name === "TokenExpiredError") {
+      throw { message: "Token has expired" };
+    }
     throw error;
   }
 };

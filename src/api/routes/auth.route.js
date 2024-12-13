@@ -10,8 +10,16 @@ Router.post("/otp/generate", userController.getSigninOTP);
 
 Router.post("/otp/verify", userController.verifyOTP);
 
-Router.post("/token/refresh", authenticateToken, userController.refreshToken);
+Router.post("/token/refresh", userController.refreshToken);
 
 Router.get("/logout", authenticateToken, userController.logout);
+
+Router.post(
+  "/email/verify/send",
+  authenticateToken,
+  userController.sendEmailVerification
+);
+
+Router.post("/email/verify", userController.verifyEmail);
 
 module.exports = Router;

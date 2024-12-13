@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev": "nodemon app.js",
+    "dev": "env-cmd -f ./env/dev.env nodemon app.js",
     "doc:generate": "swagger-cli bundle swagger/api.yaml --outfile swagger/api.json"
   },
   "author": "",
@@ -26,6 +26,7 @@
     "redis": "^4.6.13",
     "swagger-cli": "^4.0.4",
     "swagger-ui-express": "^5.0.0",
+    "uuid": "^11.0.3",
     "yamljs": "^0.3.0"
   }
 }

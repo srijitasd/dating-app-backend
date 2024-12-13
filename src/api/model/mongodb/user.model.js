@@ -29,6 +29,7 @@ const userSchema = new mongoose.Schema(
       type: { type: String, enum: ["Point"], required: true, default: "Point" },
       coordinates: { type: [Number], required: true }, // [longitude, latitude]
     },
+    email_verified: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

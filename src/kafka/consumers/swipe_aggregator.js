@@ -64,11 +64,14 @@ async function init() {
     eachMessage: async ({ topic, partition, message, heartbeat, pause }) => {
       const swipeEvent = JSON.parse(message.value.toString());
 
-      if (!swipeEvent.matched) {
+      if (swipeEvent.matched) {
         swipeBatch.push(swipeEvent);
       } else {
         await processMatch(swipeEvent);
-        await redisClient.sRem(potential_matches_store(swipeEvent.swiperId));
+        await redisClient.sRem(
+          potential_matches_store(swipeEvent.swiperId),
+          swipeEvent.swipedId
+        );
       }
 
       if (swipeBatch.length >= BATCH_SIZE) {

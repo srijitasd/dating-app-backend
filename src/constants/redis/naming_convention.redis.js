@@ -13,3 +13,9 @@ exports.potential_matches_store = (id) => {
 exports.swipe_limit_store = (id) => {
   return `swipe:limit:${id}`;
 };
+
+exports.email_verification_store = (userId) => `email_verify:${userId}`;
+
+exports.sessionKey = (userId, jti) => {
+  return `session:${userId}:${jti}`;
+};

@@ -26,6 +26,11 @@ exports.swipeService = async (data) => {
       };
     }
 
+    const isMatch = await redisClient.sIsMember(
+      potential_matches_store(swiperId),
+      swipedId
+    );
+
     if (!isMatch) {
       producer = kafkaInstance.producer();
       console.log("producer connecting..........");
